@@ -1,0 +1,155 @@
+Sub countStitch1()
+'checks for stitchPerRow value and prompts for input if empty
+If IsEmpty(Range("stitchPerRow")) = True Then
+    Dim stitchPerRow As Variant
+    stitchPerRow = InputBox("Please set your Stitches per Row", "Stitches Per Row")
+    Range("stitchPerRow").Value = stitchPerRow
+End If
+'adds 1 to current stitchCount
+    Range("stitchCount").Value = Range("stitchCount").Value + 1
+'adds 1 row when stitchCount reaches stitchPerRow
+    If (Range("stitchCount").Value >= Range("stitchPerRow").Value) Then
+        'if stitchCount > stitchPerRow then remainder is left in stitchCount
+        If (Range("stitchCount").Value > Range("stitchPerRow").Value) Then
+            Range("stitchCount").Value = Range("stitchCount").Value - Range("stitchPerRow").Value
+        Else: Range("stitchCount").Value = 0
+        End If
+        Range("rowCount").Value = Range("rowCount").Value + 1
+    End If
+'when first row is complete checks for rowComplete value and prompts for input if empty
+    If (Range("rowCount").Value > 0 And IsEmpty(Range("rowComplete")) = True) Then
+        Dim rowComplete As Variant
+        rowComplete = InputBox("Would you like to set your Rows to completion?" & vbNewLine & "If unsure please enter 0", "Rows to Completion")
+        Range("rowComplete").Value = rowComplete
+    End If
+End Sub
+
+
+Sub countStitch2()
+'checks for stitchPerRow value and prompts for input if empty
+If IsEmpty(Range("stitchPerRow")) = True Then
+    Dim stitchPerRow As Variant
+    stitchPerRow = InputBox("Please set your Stitches per Row", "Stitches Per Row")
+    Range("stitchPerRow").Value = stitchPerRow
+End If
+'adds 2 to current stitchCount
+    Range("stitchCount").Value = Range("stitchCount").Value + 2
+'adds 1 row when stitchCount reaches stitchPerRow
+    If (Range("stitchCount").Value >= Range("stitchPerRow").Value) Then
+        'if stitchCount > stitchPerRow then remainder is left in stitchCount
+        If (Range("stitchCount").Value > Range("stitchPerRow").Value) Then
+            Range("stitchCount").Value = Range("stitchCount").Value - Range("stitchPerRow").Value
+        Else: Range("stitchCount").Value = 0
+        End If
+        Range("rowCount").Value = Range("rowCount").Value + 1
+    End If
+'when first row is complete checks for rowComplete value and prompts for input if empty
+    If (Range("rowCount").Value > 0 And IsEmpty(Range("rowComplete")) = True) Then
+        Dim rowComplete As Variant
+        rowComplete = InputBox("Would you like to set your Rows to completion?" & vbNewLine & "If unsure please enter 0", "Rows to Completion")
+        Range("rowComplete").Value = rowComplete
+    End If
+End Sub
+
+
+Sub countStitch10()
+'checks for stitchPerRow value and prompts for input if empty
+If IsEmpty(Range("stitchPerRow")) = True Then
+    Dim stitchPerRow As Variant
+    stitchPerRow = InputBox("Please set your Stitches per Row", "Stitch Per Row")
+    Range("stitchPerRow").Value = stitchPerRow
+End If
+'adds 10 to current stitchCount
+    Range("stitchCount").Value = Range("stitchCount").Value + 10
+'adds 1 row when stitchCount reaches stitchPerRow
+    If (Range("stitchCount").Value >= Range("stitchPerRow").Value) Then
+        'if stitchCount > stitchPerRow then remainder is left in stitchCount
+        If (Range("stitchCount").Value > Range("stitchPerRow").Value) Then
+            Range("stitchCount").Value = Range("stitchCount").Value - Range("stitchPerRow").Value
+        Else: Range("stitchCount").Value = 0
+        End If
+        Range("rowCount").Value = Range("rowCount").Value + 1
+    End If
+'when first row is complete checks for rowComplete value and prompts for input if empty
+    If (Range("rowCount").Value > 0 And IsEmpty(Range("rowComplete")) = True) Then
+        Dim rowComplete As Variant
+        rowComplete = InputBox("Would you like to set your Rows to completion?" & vbNewLine & "If unsure please enter 0", "Rows to Completion")
+        Range("rowComplete").Value = rowComplete
+    End If
+End Sub
+
+
+Sub sub1Stitch()
+    Range("stitchCount").Value = Range("stitchCount").Value - 1
+'if stitchCount would be negative sub 1 row and set stitchCount to stitchPerRow
+    If (Range("stitchCount").Value < 0) Then
+        Range("rowCount").Value = Range("rowCount").Value - 1
+        Range("stitchCount").Value = Range("stitchPerRow").Value - 1
+    End If
+End Sub
+
+
+Sub sub1Row()
+    Range("rowCount").Value = Range("rowCount").Value - 1
+End Sub
+
+
+Sub reset_stitchCount()
+    Range("stitchCount").Value = 0
+End Sub
+
+
+Sub reset_rowCount()
+    Range("rowCount").Value = 0
+End Sub
+
+
+Sub resetAll()
+On Error GoTo Errorcatch
+    Range("rowCount").MergeArea.ClearContents 'rowCount
+    Range("stitchCount").MergeArea.ClearContents 'stitchCount
+    Range("stitchPerRow").ClearContents 'stitchPerRow
+    Range("rowComplete").ClearContents 'rowComplete
+    Range("numberToIncrement").MergeArea.ClearContents 'numberToIncrement
+    Exit Sub
+Errorcatch:
+MsgBox Err.Description
+End Sub
+
+
+Sub addStitchBasedOnIncrement()
+'checks for stitchPerRow value and prompts for input if empty
+If IsEmpty(Range("stitchPerRow")) = True Then
+    Dim stitchPerRow As Variant
+    stitchPerRow = InputBox("Please set your Stitches per Row", "Stitches Per Row")
+    Range("stitchPerRow").Value = stitchPerRow
+End If
+'add numberToIncrement
+Dim numberToIncrement As Integer
+numberToIncrement = Range("numberToIncrement").Value
+Range("stitchCount").Value = Range("stitchCount").Value + numberToIncrement
+'adjust rowCount
+    If (Range("stitchCount").Value = Range("stitchPerRow").Value) Then
+        Range("rowCount").Value = Range("rowCount").Value + 1
+        Range("stitchCount").Value = 0
+    End If
+'manage leftover stitches
+    If (Range("stitchCount").Value > Range("stitchPerRow").Value) Then
+        Range("rowCount").Value = Range("rowCount").Value + 1
+        Range("stitchCount").Value = Range("stitchCount").Value - Range("stitchPerRow").Value
+    End If
+End Sub
+
+
+Sub addRowBasedOnIncrement()
+'checks for stitchPerRow value and prompts for input if empty
+If IsEmpty(Range("stitchPerRow")) = True Then
+    Dim stitchPerRow As Variant
+    stitchPerRow = InputBox("Please set your Stitches per Row", "Stitches Per Row")
+    Range("stitchPerRow").Value = stitchPerRow
+End If
+'add numberToIncrement
+Dim numberToIncrement As Integer
+numberToIncrement = Range("numberToIncrement").Value
+Range("rowCount").Value = Range("rowCount").Value + numberToIncrement
+End Sub
