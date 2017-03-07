@@ -1,0 +1,26 @@
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+  // ss is now the spreadsheet the script is associated with
+var sheet = ss.getSheets()[0]; // sheets are counted starting from 0
+  // sheet is the first worksheet in the spreadsheet
+var stitchCount = sheet.getRange("D2:D3");
+var changeStitch = stitchCount.getValue();
+var rowCount = sheet.getRange("B2:B3");
+var changeRow = rowCount.getValue();
+var stitchPerRow = sheet.getRange("D5");
+var rowComplete = sheet.getRange("D6");
+
+  //function storeValue() {
+  //  stitchCount.setValue("10");
+  //}
+
+function add1Stitch() {
+  stitchCount.setValue(changeStitch+1);
+}
+
+function add2Stitches() {
+  stitchCount.setValue(changeStitch+2);
+}
+
+function add10Stitches() {
+  stitchCount.setValue(changeStitch+10);
+}
