@@ -7,11 +7,16 @@ var changeStitch = stitchCount.getValue();
 var rowCount = sheet.getRange("B2:B3");
 var changeRow = rowCount.getValue();
 var stitchPerRow = sheet.getRange("D5");
+var valueSPR = stitchPerRow.getValue();
 var rowComplete = sheet.getRange("D6");
+  
+  function doTest() {
+  SpreadsheetApp.getActiveSheet().getRange('F2').setValue('Hello');
+}
 
-  //function storeValue() {
-  //  stitchCount.setValue("10");
-  //}
+function storeValue() {
+  stitchCount.setValue("10");
+}
 
 function add1Stitch() {
   stitchCount.setValue(changeStitch+1);
@@ -23,4 +28,49 @@ function add2Stitches() {
 
 function add10Stitches() {
   stitchCount.setValue(changeStitch+10);
+}
+
+function sub1Stitch() {
+  stitchCount.setValue(changeStitch-1)
+}
+
+function sub1Row() {
+  rowCount.setValue(changeRow-1)
+}
+function onOpen() {
+  SpreadsheetApp.getUi() 
+      .createMenu('Custom Menu')
+      .addItem('Show prompt', 'showPrompt')
+      .addToUi();
+}
+
+function inputStitchPerRow() {
+  var ui = SpreadsheetApp.getUi(); 
+
+  var result = ui.prompt(
+      'Stitches per Row',
+      'Please enter the number of stitches needed to complete a row',
+      ui.ButtonSet.OK_CANCEL);
+
+  // Process the user's response.
+  var button = result.getSelectedButton();
+  var text = result.getResponseText();
+  if (button == ui.Button.OK) {
+    // User clicked "OK".
+    stitchPerRow.setValue(text);
+  } else if (button == ui.Button.CANCEL) {
+    // User clicked "Cancel".
+    ui.alert('You didn\'t set your stitches per row, please set manually');
+  } else if (button == ui.Button.CLOSE) {
+    // User clicked X in the title bar.
+    ui.alert('Please set stitches per row manually');
+  }
+}
+
+function checkForSPR () {
+  if(valueSPR = ""); 
+  {
+    inputStitchPerRow();
+  }
+  else {add1Stitch();}
 }
