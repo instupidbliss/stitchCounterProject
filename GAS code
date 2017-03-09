@@ -9,7 +9,10 @@ var changeRow = rowCount.getValue();
 var stitchPerRow = sheet.getRange("D5");
 var valueSPR = stitchPerRow.getValue();
 var rowComplete = sheet.getRange("D6");
+var valueRowC = rowComplete.getValue();
 var stitchZero = changeStitch - valueSPR;
+var userIncrement = sheet.getRange("F12:G12");
+var valueUserNum = userIncrement.getValue();
   
   function doTest() {
   SpreadsheetApp.getActiveSheet().getRange('D5').setValue('Test');
@@ -19,15 +22,19 @@ function storeValue() {
   sheet.getRange("F1").setValue(stitchZero);
 }
 
-function leftovers() { 
-  if ((changeStitch +1) > valueSPR) {
-  stitchCount.setValue(changeStitch - valueSPR);
-  add1Row();
-  }
+function resetAll() {
+  stitchCount.clearContent();
+  rowCount.clearContent();
+  stitchPerRow.clearContent();
+  rowComplete.clearContent();
+  userIncrement.clearContent();
 }
 
 function zeroStitch() { //this works
     stitchCount.setValue("0")
+}
+function zeroRow() { //this works
+    rowCount.setValue("0")
 }
 
 function add1Stitch() {
@@ -54,6 +61,7 @@ function add2Stitches() {
   } else {
   stitchCount.setValue(changeStitch+2);
   }
+  checkForRC();
 }
 
 function add10Stitches() {
@@ -69,6 +77,23 @@ function add10Stitches() {
   }
 }
 
+function addStitchUserNum() {
+  checkForSPR();
+  if ((changeStitch + valueUserNum) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else if (changeStitch > valueSPR){
+      stitchCount.setValue(changeStitch - valueSPR);
+      add1Row();
+  } else {
+  stitchCount.setValue(changeStitch+valueUserNum);
+  }
+}
+
+function addRowUserNum() {
+  rowCount.setValue(changeRow+valueUserNum)
+}
+
 function add1Row() {
   rowCount.setValue(changeRow+1);
 }
@@ -80,13 +105,14 @@ function sub1Stitch() {
 function sub1Row() {
   rowCount.setValue(changeRow-1)
 }
+
+
 function onOpen() {
   SpreadsheetApp.getUi() 
       .createMenu('Custom Menu')
       .addItem('Show prompt', 'showPrompt')
       .addToUi();
 }
-
 function inputStitchPerRow() {
   var ui = SpreadsheetApp.getUi(); 
 
@@ -113,5 +139,32 @@ function inputStitchPerRow() {
 function checkForSPR () {
   if (valueSPR == "") {
     inputStitchPerRow();
+  }
+}
+function onOpen() {
+  SpreadsheetApp.getUi() // Or DocumentApp or FormApp.
+      .createMenu('Custom Menu')
+      .addItem('Show prompt', 'showPrompt')
+      .addToUi();
+}
+function inputRowComplete() {
+ var ui = SpreadsheetApp.getUi();
+ var response = ui.prompt(
+   'Rows to Complete Project',
+   'Please enter the number of rows needed to complete your project', 
+   ui.ButtonSet.OK_CANCEL);
+
+ // Process the user's response.
+ if (response.getSelectedButton() == ui.Button.OK) {
+   rowComplete.setValue(response.getResponseText());
+ } else if (response.getSelectedButton() == ui.Button.CANCEL) {
+   ui.alert('Please set your Rows to Completion');
+ } else {
+   ui.alert('Please set your Rows to Completion');
+ }
+}
+function checkForRC() {
+  if(valueRowC == "" && changeRow == 1) {
+    inputRowComplete();
   }
 }
