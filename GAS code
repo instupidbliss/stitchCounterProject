@@ -9,25 +9,68 @@ var changeRow = rowCount.getValue();
 var stitchPerRow = sheet.getRange("D5");
 var valueSPR = stitchPerRow.getValue();
 var rowComplete = sheet.getRange("D6");
+var stitchZero = changeStitch - valueSPR;
   
   function doTest() {
-  SpreadsheetApp.getActiveSheet().getRange('F2').setValue('Hello');
+  SpreadsheetApp.getActiveSheet().getRange('D5').setValue('Test');
 }
 
 function storeValue() {
-  stitchCount.setValue("10");
+  sheet.getRange("F1").setValue(stitchZero);
+}
+
+function leftovers() { 
+  if ((changeStitch +1) > valueSPR) {
+  stitchCount.setValue(changeStitch - valueSPR);
+  add1Row();
+  }
+}
+
+function zeroStitch() { //this works
+    stitchCount.setValue("0")
 }
 
 function add1Stitch() {
+  checkForSPR();
+  if ((changeStitch + 1) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else if (changeStitch > valueSPR){
+      stitchCount.setValue(changeStitch - valueSPR);
+      add1Row();
+  } else {
   stitchCount.setValue(changeStitch+1);
+  }
 }
 
 function add2Stitches() {
+  checkForSPR();
+  if ((changeStitch +2) > valueSPR) {
+  stitchCount.setValue((changeStitch +2) - valueSPR);
+  add1Row();
+  } else if ((changeStitch + 2) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else {
   stitchCount.setValue(changeStitch+2);
+  }
 }
 
 function add10Stitches() {
+    checkForSPR();
+    if ((changeStitch +10) > valueSPR) {
+        stitchCount.setValue((changeStitch +10) - valueSPR);
+    add1Row();
+  } else if ((changeStitch + 10) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else {
   stitchCount.setValue(changeStitch+10);
+  }
+}
+
+function add1Row() {
+  rowCount.setValue(changeRow+1);
 }
 
 function sub1Stitch() {
@@ -68,9 +111,7 @@ function inputStitchPerRow() {
 }
 
 function checkForSPR () {
-  if(valueSPR = ""); 
-  {
+  if (valueSPR == "") {
     inputStitchPerRow();
   }
-  else {add1Stitch();}
 }
