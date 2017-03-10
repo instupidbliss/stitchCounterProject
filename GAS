@@ -1,0 +1,159 @@
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+  // ss is now the spreadsheet the script is associated with
+var sheet = ss.getSheets()[0]; // sheets are counted starting from 0
+  // sheet is the first worksheet in the spreadsheet
+var stitchCount = sheet.getRange("D2:D3");
+var changeStitch = stitchCount.getValue();
+var rowCount = sheet.getRange("B2:B3");
+var changeRow = rowCount.getValue();
+var stitchPerRow = sheet.getRange("D5");
+var valueSPR = stitchPerRow.getValue();
+var rowComplete = sheet.getRange("D6");
+var valueRowC = rowComplete.getValue();
+var stitchZero = changeStitch - valueSPR;
+var userIncrement = sheet.getRange("F12:G12");
+var valueUserNum = userIncrement.getValue();
+
+function resetAll() {
+  stitchCount.clearContent();
+  rowCount.clearContent();
+  stitchPerRow.clearContent();
+  rowComplete.clearContent();
+  userIncrement.clearContent();
+}
+function zeroStitch() { 
+    stitchCount.setValue("0")
+}
+function zeroRow() { 
+    rowCount.setValue("0")
+}
+
+function add1Stitch() {
+  checkForSPR();
+  if ((changeStitch + 1) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else if (changeStitch > valueSPR){
+      stitchCount.setValue(changeStitch - valueSPR);
+      add1Row();
+  } else {
+  stitchCount.setValue(changeStitch+1);
+  }
+}
+function add2Stitches() {
+  checkForSPR();
+  if ((changeStitch +2) > valueSPR) {
+  stitchCount.setValue((changeStitch +2) - valueSPR);
+  add1Row();
+  } else if ((changeStitch + 2) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else {
+  stitchCount.setValue(changeStitch+2);
+  }
+}
+function add10Stitches() {
+    checkForSPR();
+    if ((changeStitch +10) > valueSPR) {
+        stitchCount.setValue((changeStitch +10) - valueSPR);
+    add1Row();
+  } else if ((changeStitch + 10) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else {
+  stitchCount.setValue(changeStitch+10);
+  }
+}
+
+function addStitchUserNum() {
+  checkForSPR();
+  if ((changeStitch + valueUserNum) === valueSPR) {
+    zeroStitch();
+    add1Row();
+  } else if (changeStitch > valueSPR){
+      stitchCount.setValue(changeStitch - valueSPR);
+      add1Row();
+  } else {
+  stitchCount.setValue(changeStitch+valueUserNum);
+  }
+}
+function addRowUserNum() {
+  rowCount.setValue(changeRow+valueUserNum)
+}
+
+function add1Row() {
+  rowCount.setValue(changeRow+1);
+  checkForRC();
+}
+
+function sub1Stitch() {
+  stitchCount.setValue(changeStitch-1)
+}
+function sub1Row() {
+  rowCount.setValue(changeRow-1)
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi() 
+      .createMenu('Custom Menu')
+      .addItem('Show prompt', 'showPrompt')
+      .addToUi();
+}
+function inputStitchPerRow() {
+  var ui = SpreadsheetApp.getUi(); 
+
+  var result = ui.prompt(
+      'Stitches per Row',
+      'Please enter the number of stitches needed to complete a row',
+      ui.ButtonSet.OK_CANCEL);
+
+  // Process the user's response.
+  var button = result.getSelectedButton();
+  var text = result.getResponseText();
+  if (button == ui.Button.OK) {
+    // User clicked "OK".
+    stitchPerRow.setValue(text);
+  } else if (button == ui.Button.CANCEL) {
+    // User clicked "Cancel".
+    ui.alert('You didn\'t set your stitches per row, please set manually');
+  } else if (button == ui.Button.CLOSE) {
+    // User clicked X in the title bar.
+    ui.alert('Please set stitches per row manually');
+  }
+}
+
+function checkForSPR () {
+  if (valueSPR == "") {
+    inputStitchPerRow();
+  }
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi() // Or DocumentApp or FormApp.
+      .createMenu('Custom Menu')
+      .addItem('Show prompt', 'showPrompt')
+      .addToUi();
+}
+
+function inputRowComplete() {
+ var ui = SpreadsheetApp.getUi();
+ var response = ui.prompt(
+   'Rows to Complete Project',
+   'Please enter the number of rows needed to complete your project', 
+   ui.ButtonSet.OK_CANCEL);
+
+ // Process the user's response.
+ if (response.getSelectedButton() == ui.Button.OK) {
+   rowComplete.setValue(response.getResponseText());
+ } else if (response.getSelectedButton() == ui.Button.CANCEL) {
+   ui.alert('Please set your Rows to Completion');
+ } else {
+   ui.alert('Please set your Rows to Completion');
+ }
+}
+
+function checkForRC() {
+  if(valueRowC == "") {
+      inputRowComplete();
+    }
+  }
