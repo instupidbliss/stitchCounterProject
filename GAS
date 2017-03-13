@@ -13,6 +13,8 @@ var valueRowC = rowComplete.getValue();
 var stitchZero = changeStitch - valueSPR;
 var userIncrement = sheet.getRange("F12:G12");
 var valueUserNum = userIncrement.getValue();
+var rowsToAddIfSmallSPR = Math.round(10/valueSPR);
+var stitchRolloverIfSmallSPR = (10 % valueSPR);
 
 function resetAll() {
   stitchCount.clearContent();
@@ -42,6 +44,9 @@ function add1Stitch() {
 }
 function add2Stitches() {
   checkForSPR();
+    if(rowCount > 0) {
+      rowCount.setValue(changeRow-1);
+    }
   if ((changeStitch +2) > valueSPR) {
   stitchCount.setValue((changeStitch +2) - valueSPR);
   add1Row();
@@ -56,12 +61,21 @@ function add10Stitches() {
     checkForSPR();
     if ((changeStitch +10) > valueSPR) {
         stitchCount.setValue((changeStitch +10) - valueSPR);
-    add1Row();
+    checkSPRLessThan10();
   } else if ((changeStitch + 10) === valueSPR) {
     zeroStitch();
-    add1Row();
+    checkSPRLessThan10();
   } else {
   stitchCount.setValue(changeStitch+10);
+  }
+}
+
+function checkSPRLessThan10() {
+  if(valueSPR < 10) {
+    stitchCount.setValue(changeStitch + stitchRolloverIfSmallSPR);
+    rowCount.setValue(changeRow + rowsToAddIfSmallSPR);
+  } else {
+    add1Row();
   }
 }
 
@@ -90,7 +104,7 @@ function sub1Stitch() {
   stitchCount.setValue(changeStitch-1)
 }
 function sub1Row() {
-  rowCount.setValue(changeRow-1)
+  rowCount.setValue(changeRow-1);
 }
 
 function onOpen() {
@@ -122,7 +136,7 @@ function inputStitchPerRow() {
   }
 }
 
-function checkForSPR () {
+function checkForSPR() {
   if (valueSPR == "") {
     inputStitchPerRow();
   }
